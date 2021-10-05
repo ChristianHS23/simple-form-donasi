@@ -15,7 +15,6 @@ import {
   TextField,
   Button,
 } from '@mui/material';
-import { FORM_ERROR } from 'final-form';
 import LogoIst from 'assets/ist.png';
 import infaq from 'assets/logo.png';
 
@@ -42,13 +41,10 @@ function App() {
 
   const onSubmit = async (values) => {
     await sleep(300);
+    if (values.email !== 'test123@gmail.com') {
+      return { email: 'Email tidak terdaftar' };
+    }
     window.alert(JSON.stringify(values));
-    if (values.username !== 'erikras') {
-      return { username: 'Unknown username' };
-    }
-    if (values.password !== 'finalformrocks') {
-      return { [FORM_ERROR]: 'Login Failed' };
-    }
     window.alert('LOGIN SUCCESS!');
   };
 
@@ -89,7 +85,7 @@ function App() {
         }}
         elevation={0}
       >
-        <Toolbar variant='dense'>
+        <Toolbar variant='regular'>
           <IconButton
             edge='start'
             color='inherit'
@@ -176,8 +172,11 @@ function App() {
                         className='full'
                         placeholder='Masukkan Email Kamu'
                         autoComplete='current-email'
-                        error={meta.error && meta.touched}
-                        helperText={meta.error && meta.touched && meta.error}
+                        error={(meta.error || meta.submitError) && meta.touched}
+                        helperText={
+                          (meta.error && meta.touched && meta.error) ||
+                          meta.submitError
+                        }
                         {...input}
                       />
                     )}
