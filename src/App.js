@@ -2,7 +2,8 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable consistent-return */
 /* eslint-disable space-before-function-paren */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { styled } from '@mui/material/styles';
 import { Form, Field } from 'react-final-form';
 import {
@@ -36,6 +37,18 @@ function App() {
       minWidth: '420px',
     },
   }));
+
+  const [quotes, setQuotes] = useState('');
+
+  useEffect(() => {
+    axios
+      .get('https://quotes.rest/qod.json')
+      .then((response) => {
+        console.warn(response.data);
+        setQuotes(response.data.contents.quotes[0].quote);
+      })
+      .catch(() => {});
+  }, []);
 
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -109,6 +122,7 @@ function App() {
           minHeight: '100vh',
           minWidth: '100vw',
           display: 'flex',
+          flexDirection: 'row',
           justifyContent: 'start',
           alignContent: 'center',
           paddingTop: '64px',
@@ -123,7 +137,7 @@ function App() {
           margin='20px 40px'
           padding='40px'
           minWidth='500px'
-          maxHeight='420px'
+          maxHeight='470px'
           borderRadius='25px'
           bgcolor='white'
           display='flex'
@@ -226,6 +240,32 @@ function App() {
                     Submit
                   </Button>
                 </ButtonContainer>
+                <div
+                  style={{
+                    width: '350px',
+                    display: 'flex',
+                    paddingLeft: '50px',
+                    flexDirection: 'column',
+                    alignContent: 'center',
+                  }}
+                >
+                  <Typography
+                    sx={{ marginBottom: '20px', textAlign: 'center' }}
+                    variant='h5'
+                    color='black'
+                    component='div'
+                  >
+                    Quotes of the day:
+                  </Typography>
+                  <Typography
+                    sx={{ marginBottom: '20px', textAlign: 'center' }}
+                    variant='body1'
+                    color='#0061A7'
+                    component='div'
+                  >
+                    {`"${quotes}"`}
+                  </Typography>
+                </div>
               </form>
             )}
           />
